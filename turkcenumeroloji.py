@@ -5,6 +5,18 @@ from typing import Dict, Tuple
 # For Turkish Character
 translation_table = str.maketrans("ğĞıİöÖüÜşŞçÇ", "gGiIoOuUsScC")
 
+pick_topic = {
+    "1": "activity, addiction, individuality",
+    "2": "diplomacy, harmony, cooperation",
+    "3": "joy, creativity, words",
+    "4": "patience, service, building",
+    "5": "experience, strangers, change",
+    "6": "responsibility, home, love",
+    "7": "philosophy, analysis, retreat, waiting",
+    "8": "authority, success, growth",
+    "9": "sympathy, disappointment, compassion, greatness"
+}
+
 
 alphabet = {
     "a": 1,
@@ -37,6 +49,7 @@ alphabet = {
 
 first_name = "Uğur"
 last_name = "Özcan"
+birthday = "1993-01-20"
 first_name_cleaned = first_name.lower().translate(translation_table)
 last_name_cleaned = last_name.lower().translate(translation_table)
 
@@ -63,13 +76,51 @@ def full_name_missing_numbers(first_name_cleaned, last_name_cleaned, alphabet):
     full_name_num = match_numbers_to_letters(full_name, alphabet)
     return list([number for number in range(1, 10) if number not in full_name_num])
 
+def first_pick_age_and_status(birthday):
+    """Returns the first pick age in life period and effect"""
+    accepted_number = [1,2,3,4,5,6,7,8,9,11,22]
+    sum_of_digits = sum(int(x) for x in birthday if x.isdigit())
+    if sum_of_digits not in accepted_number:
+        sum_of_digits = sum(int(x) for x in str(sum_of_digits) if x.isdigit())
+        
+    first_pick_age = 36 - sum_of_digits
+    
+    year, month, day = birthday.split("-")
+    sum_of_day_digits = sum(int(x) for x in day if x.isdigit()) 
+    sum_of_month_digits = sum(int(x) for x in month if x.isdigit()) 
+    pick_topic_digit = sum_of_day_digits + sum_of_month_digits
+    
+    if pick_topic_digit not in accepted_number:
+        pick_topic_digit = sum(int(x) for x in str(pick_topic_digit) if x.isdigit())
+    
+    return [first_pick_age, pick_topic[str(pick_topic_digit)]]  
+
+def second_pick_age_and_status():
+    """Returns the second pick age in life period and effect"""
+    first_pick_age = first_pick_age_and_status(birthday)[0]
+    return first_pick_age + 9
+
+def third_pick_age_and_status():
+    """Returns the third pick age in life period and effect"""
+    second_pick_age = second_pick_age_and_status()
+    return second_pick_age + 9
+
+def fourth_pick_age_and_status():
+    """Returns the fourth pick age in life period and effect"""
+    third_pick_age = third_pick_age_and_status()
+    return third_pick_age + 9    
+
 
 return_object = {
-
     "first_name": first_name,
     "last_name": last_name,
     "full_name_numbers": full_name_numbers(first_name_cleaned, last_name_cleaned, alphabet),
-    "full_name_missing_numbers": full_name_missing_numbers(first_name_cleaned, last_name_cleaned, alphabet)
+    "full_name_missing_numbers": full_name_missing_numbers(first_name_cleaned, last_name_cleaned, alphabet),
+    "first_pick_age": first_pick_age_and_status(birthday)[0],
+    "first_pick_topic": first_pick_age_and_status(birthday)[1],
+    "second_pick_age": second_pick_age_and_status(),
+    "third_pick_age": third_pick_age_and_status(),
+    "fourth_pick_age": fourth_pick_age_and_status()
 }
 
 print(return_object)
